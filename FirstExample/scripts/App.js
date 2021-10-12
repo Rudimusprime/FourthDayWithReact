@@ -1,5 +1,11 @@
-const PositiveMessage = () => <p>Możesz obejrzeć film. Zapraszamy!</p>;
-const NegativeMessage = () => <p>Nie możesz obejrzeć filmów, ponieważ masz mniej niż 16 lat!</p>;
+// const PositiveMessage = () => <p>Możesz obejrzeć film. Zapraszamy!</p>;
+// const NegativeMessage = () => <p>Nie możesz obejrzeć filmów, ponieważ masz mniej niż 16 lat!</p>;
+const ValidationMessage = (props) => {
+    const {txt} = props;
+    return (
+        <p>{txt}</p>
+    )
+}
 
 
 class TicketShop extends React.Component {
@@ -15,12 +21,13 @@ class TicketShop extends React.Component {
         })
     }
 
-    displayMessage = () => {
-        if (this.state.isFormSubmitted) {
-            if (this.state.isConfirmed) {
-                return <PositiveMessage/>
+    displayMessage = (isConfirmed, isFormSubmitted) => {
+        if (isFormSubmitted) {
+            if (isConfirmed) {
+                return <ValidationMessage txt="Miłego seansu"/>
             } else {
-                return <NegativeMessage/>
+                return <ValidationMessage
+                    txt="Nie masz ukończonego minimalnego wymaganego wieku aby obejrzeć ten film"/>
             }
         } else {
             return null
@@ -36,19 +43,20 @@ class TicketShop extends React.Component {
     }
 
     render() {
-        console.log(this.state.isConfirmed);
+        const {isConfirmed, isFormSubmitted} = this.state;
+        console.log(isConfirmed);
         return (
             <>
                 <h1>Kup bilet na horror roku!</h1>
                 <form onSubmit={this.handleFormSubmit}>
                     <input type="checkbox" id="age"
                            onChange={this.handleCheckBoxChange}
-                           checked={this.state.isConfirmed}/>
+                           checked={isConfirmed}/>
                     <label htmlFor="age">Mam co najmniej 16 lat</label>
                     <br/>
                     <button type="submit">Kup bilet</button>
                 </form>
-                {this.displayMessage()}
+                {this.displayMessage(this.state.isConfirmed, this.state.isFormSubmitted)}
             </>
         )
     }
